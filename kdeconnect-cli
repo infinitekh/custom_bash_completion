@@ -1,0 +1,27 @@
+_kde_connect()
+{
+	local cur prev opts
+  COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}" 
+	opts="-l -a --id-only --name-only --id-name-only --refresh --pair --ring --unpair --ping --ping-msg --share --share-text --list-notifications --lock --send-sms --destination --device --name --encryption-info --list-commands --execute-command -k --my-id --photo -h -v --author --license --desktopfile "
+		if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+		if [[ ${prev} == '-d' || ${prev} == '--device' ]] ; then
+			devices="$(kdeconnect-cli -a --id-only)"
+				COMPREPLY=( $(compgen -W "${devices}" -- ${cur}) )
+        return 0
+    fi
+	
+		if [[ ${prev} == '-n' || ${prev} == '--name' ]] ; then
+			names="$(kdeconnect-cli -a --name-only)"
+				COMPREPLY=( $(compgen -W "${devices}" -- ${cur}) )
+        return 0
+    fi
+
+		COMPREPLY="$(kdeconnect-cli)"
+
+}
+complete -F _kde_connect kdeconnect-cli
